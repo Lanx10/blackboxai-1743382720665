@@ -1,6 +1,6 @@
 # PRMSU Research Services Management System
 
-A comprehensive web application for managing research services at Palawan State University - Puerto Princesa Campus (PRMSU).
+A comprehensive web application for managing research services at President Ramon Magsaysay State University (PRMSU).
 
 ## Features
 
