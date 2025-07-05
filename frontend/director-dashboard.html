@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRMSU Research Services - Research Director Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin: 5px 10px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .stat-card .icon.primary { color: #667eea; }
+        .stat-card .icon.success { color: #28a745; }
+        .stat-card .icon.warning { color: #ffc107; }
+        .stat-card .icon.danger { color: #dc3545; }
+        .stat-card .icon.info { color: #17a2b8; }
+        .project-card {
+            transition: transform 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 10px;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .table-responsive {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        .approval-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .approval-actions .btn {
+            padding: 5px 15px;
+            font-size: 0.85rem;
+        }
+        .pending-review {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .review-form {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="user-info">
+                    <h6 id="userName">Loading...</h6>
+                    <small id="userRole">Research Director</small>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('all-projects')">
+                        <i class="fas fa-project-diagram me-2"></i>All Projects
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('pending-review')">
+                        <i class="fas fa-clock me-2"></i>Pending Review
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('users')">
+                        <i class="fas fa-users me-2"></i>Users
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('reports')">
+                        <i class="fas fa-chart-bar me-2"></i>Reports
+                    </a>
+                    <a class="nav-link" href="#" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tachometer-alt me-2"></i>Research Director Dashboard</h2>
+                        <p class="mb-0">Overview of all research activities</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-2 mb-4">
+                            <div class="stat-card">
+                                <div class="icon primary">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <h3 id="totalProjects">0</h3>
+                                <p>Total Projects</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-4">
+                            <div class="stat-card">
+                                <div class="icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h3 id="pendingReview">0</h3>
+                                <p>Pending Review</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-4">
+                            <div class="stat-card">
+                                <div class="icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h3 id="approvedProjects">0</h3>
+                                <p>Approved</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-4">
+                            <div class="stat-card">
+                                <div class="icon danger">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <h3 id="rejectedProjects">0</h3>
+                                <p>Rejected</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-4">
+                            <div class="stat-card">
+                                <div class="icon info">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 id="totalUsers">0</h3>
+                                <p>Total Users</p>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-4">
+                            <div class="stat-card">
+                                <div class="icon primary">
+                                    <i class="fas fa-flask"></i>
+                                </div>
+                                <h3 id="totalResearchers">0</h3>
+                                <p>Researchers</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-exclamation-triangle me-2"></i>Projects Requiring Review</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="projectsNeedingReview">
+                                        <p class="text-muted">Loading projects...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-chart-pie me-2"></i>Projects by Category</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="projectsByCategory">
+                                        <p class="text-muted">Loading statistics...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Projects Section -->
+                <div id="all-projects-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-project-diagram me-2"></i>All Projects</h2>
+                        <p class="mb-0">View and manage all research projects</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Researcher</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+                                            <th>Created</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="allProjectsTable">
+                                        <tr>
+                                            <td colspan="6" class="text-muted text-center">Loading projects...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Review Section -->
+                <div id="pending-review-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-clock me-2"></i>Pending Review</h2>
+                        <p class="mb-0">Projects awaiting your review and approval</p>
+                    </div>
+                    
+                    <div id="pendingProjectsList">
+                        <div class="text-muted">Loading pending projects...</div>
+                    </div>
+                </div>
+
+                <!-- Users Section -->
+                <div id="users-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-users me-2"></i>Users Management</h2>
+                        <p class="mb-0">Manage users and their roles</p>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Department</th>
+                                            <th>Position</th>
+                                            <th>Created</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTable">
+                                        <tr>
+                                            <td colspan="7" class="text-muted text-center">Loading users...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Section -->
+                <div id="reports-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-bar me-2"></i>Reports</h2>
+                        <p class="mb-0">Research statistics and analytics</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Monthly Statistics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="monthlyChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Category Distribution</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="categoryChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Project Modal -->
+    <div class="modal fade" id="reviewProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Review Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="reviewProjectContent">
+                    <!-- Project review content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        let currentUser = null;
+        let authToken = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserInfo();
+            loadDashboardData();
+        });
+
+        function checkAuth() {
+            authToken = localStorage.getItem('token');
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!authToken || !currentUser.id) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            if (currentUser.role !== 'research_director') {
+                window.location.href = 'index.html';
+                return;
+            }
+        }
+
+        function loadUserInfo() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = 
+                    `${currentUser.first_name} ${currentUser.last_name}`;
+                document.getElementById('userRole').textContent = 
+                    `${currentUser.position} - ${currentUser.department}`;
+            }
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        }
+
+        async function loadDashboardData() {
+            try {
+                const [stats, projects, users] = await Promise.all([
+                    apiRequest('/dashboard/stats'),
+                    apiRequest('/research-projects'),
+                    apiRequest('/users')
+                ]);
+
+                // Update statistics
+                document.getElementById('totalProjects').textContent = stats.totalProjects || 0;
+                
+                const statusCounts = stats.projectsByStatus || [];
+                document.getElementById('pendingReview').textContent = 
+                    statusCounts.find(s => s.status === 'submitted')?.count || 0;
+                document.getElementById('approvedProjects').textContent = 
+                    statusCounts.find(s => s.status === 'approved')?.count || 0;
+                document.getElementById('rejectedProjects').textContent = 
+                    statusCounts.find(s => s.status === 'rejected')?.count || 0;
+                
+                document.getElementById('totalUsers').textContent = users.length || 0;
+                document.getElementById('totalResearchers').textContent = 
+                    users.filter(u => u.role === 'researcher').length || 0;
+
+                // Load projects needing review
+                const pendingProjects = projects.filter(p => p.status === 'submitted').slice(0, 5);
+                loadProjectsNeedingReview(pendingProjects);
+
+                // Load category statistics
+                loadCategoryStatistics(stats.projectsByCategory || []);
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function loadProjectsNeedingReview(projects) {
+            const container = document.getElementById('projectsNeedingReview');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<p class="text-muted">No projects pending review.</p>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(project => `
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 pending-review rounded">
+                    <div>
+                        <strong>${project.title}</strong>
+                        <small class="text-muted d-block">by ${project.first_name} ${project.last_name}</small>
+                    </div>
+                    <button class="btn btn-sm btn-primary" onclick="reviewProject(${project.id})">
+                        Review
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function loadCategoryStatistics(categories) {
+            const container = document.getElementById('projectsByCategory');
+            
+            if (categories.length === 0) {
+                container.innerHTML = '<p class="text-muted">No data available.</p>';
+                return;
+            }
+            
+            const total = categories.reduce((sum, cat) => sum + cat.count, 0);
+            container.innerHTML = categories.map(category => {
+                const percentage = ((category.count / total) * 100).toFixed(1);
+                return `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span>${category.category}</span>
+                        <div class="d-flex align-items-center">
+                            <div class="progress me-2" style="width: 100px; height: 10px;">
+                                <div class="progress-bar" style="width: ${percentage}%"></div>
+                            </div>
+                            <span class="badge bg-primary">${category.count}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('d-none');
+            });
+            
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).classList.remove('d-none');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load section data
+            switch (sectionName) {
+                case 'all-projects':
+                    loadAllProjects();
+                    break;
+                case 'pending-review':
+                    loadPendingProjects();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'reports':
+                    loadReports();
+                    break;
+            }
+        }
+
+        async function loadAllProjects() {
+            try {
+                const projects = await apiRequest('/research-projects');
+                const tbody = document.getElementById('allProjectsTable');
+                
+                if (projects.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center">No projects found.</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = projects.map(project => `
+                    <tr>
+                        <td>${project.title}</td>
+                        <td>${project.first_name} ${project.last_name}</td>
+                        <td><span class="badge bg-info">${project.category}</span></td>
+                        <td><span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span></td>
+                        <td>${new Date(project.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="viewProject(${project.id})">
+                                View
+                            </button>
+                            ${project.status === 'submitted' ? 
+                                `<button class="btn btn-sm btn-warning ms-1" onclick="reviewProject(${project.id})">Review</button>` : 
+                                ''
+                            }
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        async function loadPendingProjects() {
+            try {
+                const projects = await apiRequest('/research-projects');
+                const pendingProjects = projects.filter(p => p.status === 'submitted');
+                const container = document.getElementById('pendingProjectsList');
+                
+                if (pendingProjects.length === 0) {
+                    container.innerHTML = '<div class="card"><div class="card-body text-muted text-center">No projects pending review.</div></div>';
+                    return;
+                }
+                
+                container.innerHTML = pendingProjects.map(project => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h5>${project.title}</h5>
+                                    <p class="text-muted mb-2">by ${project.first_name} ${project.last_name} (${project.department})</p>
+                                    <p class="mb-2"><strong>Category:</strong> ${project.category}</p>
+                                    <p class="mb-0">${project.description || 'No description provided'}</p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <p class="small text-muted mb-3">Submitted: ${new Date(project.created_at).toLocaleDateString()}</p>
+                                    <div class="approval-actions">
+                                        <button class="btn btn-success" onclick="approveProject(${project.id})">
+                                            <i class="fas fa-check me-1"></i>Approve
+                                        </button>
+                                        <button class="btn btn-danger" onclick="rejectProject(${project.id})">
+                                            <i class="fas fa-times me-1"></i>Reject
+                                        </button>
+                                        <button class="btn btn-primary" onclick="reviewProject(${project.id})">
+                                            <i class="fas fa-eye me-1"></i>Review
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading pending projects:', error);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const users = await apiRequest('/users');
+                const tbody = document.getElementById('usersTable');
+                
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-muted text-center">No users found.</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.first_name} ${user.last_name}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td><span class="badge bg-${getRoleColor(user.role)}">${user.role}</span></td>
+                        <td>${user.department || 'N/A'}</td>
+                        <td>${user.position || 'N/A'}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        function loadReports() {
+            // This would typically load chart data
+            const container = document.getElementById('reports-section');
+            // For now, just show placeholder
+            console.log('Reports section loaded');
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'draft': 'secondary',
+                'submitted': 'primary',
+                'under_review': 'warning',
+                'approved': 'success',
+                'rejected': 'danger',
+                'completed': 'success'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function getRoleColor(role) {
+            const colors = {
+                'researcher': 'primary',
+                'research_director': 'success',
+                'inhouse': 'info'
+            };
+            return colors[role] || 'secondary';
+        }
+
+        async function approveProject(projectId) {
+            if (!confirm('Are you sure you want to approve this project?')) {
+                return;
+            }
+            
+            try {
+                await apiRequest(`/research-projects/${projectId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'approved' })
+                });
+                
+                alert('Project approved successfully!');
+                loadPendingProjects();
+                loadDashboardData();
+            } catch (error) {
+                console.error('Error approving project:', error);
+                alert('Error approving project. Please try again.');
+            }
+        }
+
+        async function rejectProject(projectId) {
+            const reason = prompt('Please provide a reason for rejection:');
+            if (!reason) return;
+            
+            try {
+                await apiRequest(`/research-projects/${projectId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ status: 'rejected' })
+                });
+                
+                alert('Project rejected successfully!');
+                loadPendingProjects();
+                loadDashboardData();
+            } catch (error) {
+                console.error('Error rejecting project:', error);
+                alert('Error rejecting project. Please try again.');
+            }
+        }
+
+        async function reviewProject(projectId) {
+            try {
+                const project = await apiRequest(`/research-projects/${projectId}`);
+                const documents = await apiRequest(`/research-projects/${projectId}/documents`);
+                
+                const modalContent = document.getElementById('reviewProjectContent');
+                modalContent.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>${project.title}</h4>
+                            <p><strong>Researcher:</strong> ${project.first_name} ${project.last_name}</p>
+                            <p><strong>Department:</strong> ${project.department}</p>
+                            <p><strong>Category:</strong> ${project.category}</p>
+                            <p><strong>Status:</strong> <span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span></p>
+                            <p><strong>Description:</strong></p>
+                            <p>${project.description || 'No description provided'}</p>
+                            <p><strong>Submitted:</strong> ${new Date(project.created_at).toLocaleDateString()}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Documents</h5>
+                            ${documents.length > 0 ? documents.map(doc => `
+                                <div class="document-item mb-2">
+                                    <div>
+                                        <strong>${doc.original_name}</strong>
+                                        <small class="text-muted d-block">${new Date(doc.uploaded_at).toLocaleDateString()}</small>
+                                    </div>
+                                    <i class="fas fa-file-pdf text-danger"></i>
+                                </div>
+                            `).join('') : '<p class="text-muted">No documents uploaded</p>'}
+                        </div>
+                    </div>
+                    
+                    ${project.status === 'submitted' ? `
+                        <div class="review-form mt-3">
+                            <h5>Review Actions</h5>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success" onclick="approveProject(${project.id}); bootstrap.Modal.getInstance(document.getElementById('reviewProjectModal')).hide();">
+                                    <i class="fas fa-check me-1"></i>Approve Project
+                                </button>
+                                <button class="btn btn-danger" onclick="rejectProject(${project.id}); bootstrap.Modal.getInstance(document.getElementById('reviewProjectModal')).hide();">
+                                    <i class="fas fa-times me-1"></i>Reject Project
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+                `;
+                
+                new bootstrap.Modal(document.getElementById('reviewProjectModal')).show();
+                
+            } catch (error) {
+                console.error('Error loading project for review:', error);
+                alert('Error loading project details');
+            }
+        }
+
+        async function viewProject(projectId) {
+            await reviewProject(projectId); // Same functionality for now
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

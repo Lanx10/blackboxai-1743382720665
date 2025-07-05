@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRMSU Research Services - Inhouse User Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin: 5px 10px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            border: none;
+            border-radius: 10px;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .stat-card .icon.primary { color: #17a2b8; }
+        .stat-card .icon.success { color: #28a745; }
+        .stat-card .icon.warning { color: #ffc107; }
+        .stat-card .icon.info { color: #17a2b8; }
+        .project-card {
+            transition: transform 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        .form-control:focus {
+            border-color: #17a2b8;
+            box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+        }
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 10px;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .collaboration-card {
+            border-left: 4px solid #17a2b8;
+            background: #f8f9fa;
+        }
+        .activity-item {
+            border-left: 3px solid #17a2b8;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        .research-highlight {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .inhouse-badge {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        .table-responsive {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .table th {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            border: none;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #17a2b8;
+            color: #17a2b8;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .quick-action-btn:hover {
+            background: #17a2b8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="user-info">
+                    <h6 id="userName">Loading...</h6>
+                    <small id="userRole">Inhouse User</small>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('inhouse-projects')">
+                        <i class="fas fa-home me-2"></i>Inhouse Projects
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('collaboration')">
+                        <i class="fas fa-users me-2"></i>Collaboration
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('resources')">
+                        <i class="fas fa-book me-2"></i>Resources
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('reports')">
+                        <i class="fas fa-chart-line me-2"></i>Reports
+                    </a>
+                    <a class="nav-link" href="#" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tachometer-alt me-2"></i>Inhouse Dashboard</h2>
+                        <p class="mb-0">Welcome to your inhouse research portal</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon primary">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <h3 id="inhouseProjects">0</h3>
+                                <p>Inhouse Projects</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon success">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3 id="collaborations">0</h3>
+                                <p>Collaborations</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h3 id="ongoingProjects">0</h3>
+                                <p>Ongoing</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon info">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h3 id="completedProjects">0</h3>
+                                <p>Completed</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-chart-bar me-2"></i>Research Activity</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="recentActivity">
+                                        <p class="text-muted">Loading recent activities...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-rocket me-2"></i>Quick Actions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="quick-actions">
+                                        <a href="#" class="quick-action-btn" onclick="showSection('inhouse-projects')">
+                                            <i class="fas fa-plus me-2"></i>New Project
+                                        </a>
+                                        <a href="#" class="quick-action-btn" onclick="showSection('collaboration')">
+                                            <i class="fas fa-handshake me-2"></i>Collaborate
+                                        </a>
+                                        <a href="#" class="quick-action-btn" onclick="showSection('resources')">
+                                            <i class="fas fa-download me-2"></i>Resources
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inhouse Projects Section -->
+                <div id="inhouse-projects-section" class="section d-none">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-home me-2"></i>Inhouse Projects</h2>
+                            <p class="mb-0">Internal research projects and initiatives</p>
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                            <i class="fas fa-plus me-2"></i>New Inhouse Project
+                        </button>
+                    </div>
+                    
+                    <div class="research-highlight">
+                        <h4><i class="fas fa-lightbulb me-2"></i>Featured Research</h4>
+                        <p>Discover innovative inhouse research projects and contribute to collaborative research efforts within PRMSU.</p>
+                    </div>
+                    
+                    <div class="row" id="inhouseProjectsList">
+                        <div class="col-12">
+                            <p class="text-muted">Loading inhouse projects...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collaboration Section -->
+                <div id="collaboration-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-users me-2"></i>Collaboration Hub</h2>
+                        <p class="mb-0">Connect and collaborate with researchers</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-project-diagram me-2"></i>Collaborative Projects</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="collaborativeProjects">
+                                        <p class="text-muted">Loading collaborative projects...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5><i class="fas fa-user-friends me-2"></i>Research Partners</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="researchPartners">
+                                        <p class="text-muted">Loading research partners...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resources Section -->
+                <div id="resources-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-book me-2"></i>Research Resources</h2>
+                        <p class="mb-0">Access research materials and documentation</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-pdf fa-3x text-info mb-3"></i>
+                                    <h5>Research Guidelines</h5>
+                                    <p class="text-muted">Standard operating procedures and guidelines</p>
+                                    <button class="btn btn-primary">Download</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-alt fa-3x text-success mb-3"></i>
+                                    <h5>Templates</h5>
+                                    <p class="text-muted">Research proposal and report templates</p>
+                                    <button class="btn btn-primary">Download</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chart-bar fa-3x text-warning mb-3"></i>
+                                    <h5>Data Tools</h5>
+                                    <p class="text-muted">Research data analysis and visualization tools</p>
+                                    <button class="btn btn-primary">Access</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reports Section -->
+                <div id="reports-section" class="section d-none">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-line me-2"></i>Research Reports</h2>
+                        <p class="mb-0">Analytics and progress reports</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Monthly Progress</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="monthlyProgress">
+                                        <p class="text-muted">Loading monthly progress...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Project Statistics</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="projectStatistics">
+                                        <p class="text-muted">Loading project statistics...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div class="modal fade" id="createProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Inhouse Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createProjectForm">
+                        <div class="mb-3">
+                            <label for="projectTitle" class="form-label">Project Title</label>
+                            <input type="text" class="form-control" id="projectTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="projectDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectCollaborators" class="form-label">Collaborators (Optional)</label>
+                            <input type="text" class="form-control" id="projectCollaborators" placeholder="Enter researcher names or emails">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Initial Document</label>
+                            <input type="file" class="form-control" id="projectFile" accept=".pdf,.doc,.docx,.txt">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitInhouseProject()">Create Project</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details Modal -->
+    <div class="modal fade" id="projectDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Project Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="projectDetailsContent">
+                    <!-- Project details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        let currentUser = null;
+        let authToken = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserInfo();
+            loadDashboardData();
+        });
+
+        function checkAuth() {
+            authToken = localStorage.getItem('token');
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!authToken || !currentUser.id) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            if (currentUser.role !== 'inhouse') {
+                window.location.href = 'index.html';
+                return;
+            }
+        }
+
+        function loadUserInfo() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = 
+                    `${currentUser.first_name} ${currentUser.last_name}`;
+                document.getElementById('userRole').textContent = 
+                    `${currentUser.position} - ${currentUser.department}`;
+            }
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        }
+
+        async function loadDashboardData() {
+            try {
+                const [stats, projects] = await Promise.all([
+                    apiRequest('/dashboard/stats'),
+                    apiRequest('/research-projects')
+                ]);
+
+                // Filter inhouse projects
+                const inhouseProjects = projects.filter(p => p.category === 'inhouse');
+                
+                // Update statistics
+                document.getElementById('inhouseProjects').textContent = inhouseProjects.length;
+                document.getElementById('collaborations').textContent = inhouseProjects.filter(p => p.status === 'approved').length;
+                document.getElementById('ongoingProjects').textContent = inhouseProjects.filter(p => p.status === 'under_review').length;
+                document.getElementById('completedProjects').textContent = inhouseProjects.filter(p => p.status === 'completed').length;
+
+                // Load recent activities
+                loadRecentActivities(inhouseProjects.slice(0, 5));
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function loadRecentActivities(projects) {
+            const container = document.getElementById('recentActivity');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<p class="text-muted">No recent activities.</p>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(project => `
+                <div class="activity-item">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <strong>${project.title}</strong>
+                            <p class="text-muted mb-0">by ${project.first_name} ${project.last_name}</p>
+                        </div>
+                        <small class="text-muted">${new Date(project.created_at).toLocaleDateString()}</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('d-none');
+            });
+            
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).classList.remove('d-none');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load section data
+            switch (sectionName) {
+                case 'inhouse-projects':
+                    loadInhouseProjects();
+                    break;
+                case 'collaboration':
+                    loadCollaborationData();
+                    break;
+                case 'resources':
+                    loadResources();
+                    break;
+                case 'reports':
+                    loadReports();
+                    break;
+            }
+        }
+
+        async function loadInhouseProjects() {
+            try {
+                const projects = await apiRequest('/research-projects');
+                const inhouseProjects = projects.filter(p => p.category === 'inhouse');
+                
+                displayInhouseProjects(inhouseProjects);
+            } catch (error) {
+                console.error('Error loading inhouse projects:', error);
+            }
+        }
+
+        function displayInhouseProjects(projects) {
+            const container = document.getElementById('inhouseProjectsList');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<div class="col-12"><p class="text-muted">No inhouse projects found.</p></div>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(project => `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card project-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title">${project.title}</h5>
+                                <span class="inhouse-badge">Inhouse</span>
+                            </div>
+                            <p class="card-text">${project.description || 'No description'}</p>
+                            <p class="text-muted mb-2">
+                                <i class="fas fa-user me-1"></i>
+                                ${project.first_name} ${project.last_name}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span>
+                                <button class="btn btn-sm btn-primary" onclick="viewProject(${project.id})">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadCollaborationData() {
+            const collaborativeContainer = document.getElementById('collaborativeProjects');
+            const partnersContainer = document.getElementById('researchPartners');
+            
+            collaborativeContainer.innerHTML = `
+                <div class="collaboration-card p-3 mb-3">
+                    <h6><i class="fas fa-handshake me-2"></i>Multi-Department Research Initiative</h6>
+                    <p class="text-muted mb-2">Collaborative study on sustainable technology</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">3 researchers involved</small>
+                        <button class="btn btn-sm btn-outline-primary">Join</button>
+                    </div>
+                </div>
+                <div class="collaboration-card p-3 mb-3">
+                    <h6><i class="fas fa-globe me-2"></i>International Research Partnership</h6>
+                    <p class="text-muted mb-2">Cross-cultural educational research</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">5 researchers involved</small>
+                        <button class="btn btn-sm btn-outline-primary">Join</button>
+                    </div>
+                </div>
+            `;
+            
+            partnersContainer.innerHTML = `
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center text-white me-3" style="width: 40px; height: 40px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <strong>Dr. Maria Santos</strong>
+                        <small class="text-muted d-block">Education Department</small>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success rounded-circle d-flex align-items-center justify-content-center text-white me-3" style="width: 40px; height: 40px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <strong>Dr. John Rivera</strong>
+                        <small class="text-muted d-block">Engineering Department</small>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadResources() {
+            // Resources are statically loaded in the HTML
+            console.log('Resources section loaded');
+        }
+
+        function loadReports() {
+            const monthlyContainer = document.getElementById('monthlyProgress');
+            const statsContainer = document.getElementById('projectStatistics');
+            
+            monthlyContainer.innerHTML = `
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Projects Started</span>
+                    <strong>5</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Projects Completed</span>
+                    <strong>3</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Collaborations</span>
+                    <strong>8</strong>
+                </div>
+                <div class="progress mt-3">
+                    <div class="progress-bar" style="width: 75%">75% Goal Achievement</div>
+                </div>
+            `;
+            
+            statsContainer.innerHTML = `
+                <div class="text-center mb-3">
+                    <h3 class="text-primary">15</h3>
+                    <p class="text-muted">Total Inhouse Projects</p>
+                </div>
+                <div class="text-center mb-3">
+                    <h3 class="text-success">12</h3>
+                    <p class="text-muted">Active Collaborations</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-info">8</h3>
+                    <p class="text-muted">Published Papers</p>
+                </div>
+            `;
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'draft': 'secondary',
+                'submitted': 'primary',
+                'under_review': 'warning',
+                'approved': 'success',
+                'rejected': 'danger',
+                'completed': 'success'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        async function submitInhouseProject() {
+            try {
+                const title = document.getElementById('projectTitle').value;
+                const description = document.getElementById('projectDescription').value;
+                const collaborators = document.getElementById('projectCollaborators').value;
+                const file = document.getElementById('projectFile').files[0];
+                
+                if (!title || !description) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Create project
+                const project = await apiRequest('/research-projects', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        title, 
+                        description: description + (collaborators ? `\n\nCollaborators: ${collaborators}` : ''),
+                        category: 'inhouse' 
+                    })
+                });
+                
+                // Upload file if provided
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('document', file);
+                    
+                    await fetch(`${API_BASE_URL}/research-projects/${project.id}/upload`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: formData
+                    });
+                }
+                
+                // Reset form and close modal
+                document.getElementById('createProjectForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('createProjectModal')).hide();
+                
+                // Reload current section
+                loadDashboardData();
+                loadInhouseProjects();
+                
+                alert('Inhouse project created successfully!');
+                
+            } catch (error) {
+                console.error('Error creating inhouse project:', error);
+                alert('Error creating project. Please try again.');
+            }
+        }
+
+        async function viewProject(projectId) {
+            try {
+                const project = await apiRequest(`/research-projects/${projectId}`);
+                const documents = await apiRequest(`/research-projects/${projectId}/documents`);
+                
+                const modalContent = document.getElementById('projectDetailsContent');
+                modalContent.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>${project.title}</h4>
+                            <p><strong>Category:</strong> <span class="inhouse-badge">${project.category}</span></p>
+                            <p><strong>Status:</strong> <span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span></p>
+                            <p><strong>Researcher:</strong> ${project.first_name} ${project.last_name}</p>
+                            <p><strong>Department:</strong> ${project.department}</p>
+                            <p><strong>Description:</strong></p>
+                            <p>${project.description || 'No description provided'}</p>
+                            <p><strong>Created:</strong> ${new Date(project.created_at).toLocaleDateString()}</p>
+                            <p><strong>Last Updated:</strong> ${new Date(project.updated_at).toLocaleDateString()}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Documents</h5>
+                            ${documents.length > 0 ? documents.map(doc => `
+                                <div class="document-item mb-2">
+                                    <div>
+                                        <strong>${doc.original_name}</strong>
+                                        <small class="text-muted d-block">${new Date(doc.uploaded_at).toLocaleDateString()}</small>
+                                    </div>
+                                    <i class="fas fa-file-pdf text-danger"></i>
+                                </div>
+                            `).join('') : '<p class="text-muted">No documents uploaded</p>'}
+                        </div>
+                    </div>
+                `;
+                
+                new bootstrap.Modal(document.getElementById('projectDetailsModal')).show();
+                
+            } catch (error) {
+                console.error('Error loading project details:', error);
+                alert('Error loading project details');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

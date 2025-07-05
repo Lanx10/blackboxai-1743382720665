@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRMSU Research Services - Researcher Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .sidebar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 0;
+        }
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            margin: 5px 10px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        .stat-card .icon.primary { color: #667eea; }
+        .stat-card .icon.success { color: #28a745; }
+        .stat-card .icon.warning { color: #ffc107; }
+        .stat-card .icon.info { color: #17a2b8; }
+        .project-card {
+            transition: transform 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 10px;
+        }
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .file-upload-zone {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload-zone:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        .document-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="user-info">
+                    <h6 id="userName">Loading...</h6>
+                    <small id="userRole">Researcher</small>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('projects')">
+                        <i class="fas fa-project-diagram me-2"></i>My Projects
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('proposals')">
+                        <i class="fas fa-file-alt me-2"></i>Proposals
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('inhouse')">
+                        <i class="fas fa-home me-2"></i>Inhouse Research
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('papers')">
+                        <i class="fas fa-file-pdf me-2"></i>Research Papers
+                    </a>
+                    <a class="nav-link" href="#" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-tachometer-alt me-2"></i>Dashboard</h2>
+                        <p class="mb-0">Welcome to your research dashboard</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon primary">
+                                    <i class="fas fa-project-diagram"></i>
+                                </div>
+                                <h3 id="totalProjects">0</h3>
+                                <p>Total Projects</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <h3 id="completedProjects">0</h3>
+                                <p>Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h3 id="pendingProjects">0</h3>
+                                <p>Pending</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="stat-card">
+                                <div class="icon info">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h3 id="proposalCount">0</h3>
+                                <p>Proposals</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-clock me-2"></i>Recent Projects</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="recentProjects">
+                                <p class="text-muted">Loading recent projects...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Section -->
+                <div id="projects-section" class="section d-none">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-project-diagram me-2"></i>My Projects</h2>
+                            <p class="mb-0">Manage your research projects</p>
+                        </div>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createProjectModal">
+                            <i class="fas fa-plus me-2"></i>New Project
+                        </button>
+                    </div>
+                    
+                    <div class="row" id="projectsList">
+                        <div class="col-12">
+                            <p class="text-muted">Loading projects...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proposals Section -->
+                <div id="proposals-section" class="section d-none">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-file-alt me-2"></i>Proposals</h2>
+                            <p class="mb-0">Research proposals and submissions</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="createProject('proposal')">
+                            <i class="fas fa-plus me-2"></i>New Proposal
+                        </button>
+                    </div>
+                    
+                    <div class="row" id="proposalsList">
+                        <div class="col-12">
+                            <p class="text-muted">Loading proposals...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inhouse Section -->
+                <div id="inhouse-section" class="section d-none">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-home me-2"></i>Inhouse Research</h2>
+                            <p class="mb-0">Internal research projects</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="createProject('inhouse')">
+                            <i class="fas fa-plus me-2"></i>New Inhouse Project
+                        </button>
+                    </div>
+                    
+                    <div class="row" id="inhouseList">
+                        <div class="col-12">
+                            <p class="text-muted">Loading inhouse research...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Papers Section -->
+                <div id="papers-section" class="section d-none">
+                    <div class="section-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-file-pdf me-2"></i>Research Papers</h2>
+                            <p class="mb-0">Published and unpublished papers</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="createProject('research_paper')">
+                            <i class="fas fa-plus me-2"></i>New Paper
+                        </button>
+                    </div>
+                    
+                    <div class="row" id="papersList">
+                        <div class="col-12">
+                            <p class="text-muted">Loading research papers...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div class="modal fade" id="createProjectModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create New Project</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createProjectForm">
+                        <div class="mb-3">
+                            <label for="projectTitle" class="form-label">Project Title</label>
+                            <input type="text" class="form-control" id="projectTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectCategory" class="form-label">Category</label>
+                            <select class="form-control" id="projectCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="proposal">Proposal</option>
+                                <option value="inhouse">Inhouse Research</option>
+                                <option value="research_paper">Research Paper</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="projectDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="projectDescription" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Document Upload</label>
+                            <div class="file-upload-zone" onclick="document.getElementById('projectFile').click()">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                <p>Click to upload document</p>
+                                <input type="file" id="projectFile" class="d-none" accept=".pdf,.doc,.docx,.txt">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="submitProject()">Create Project</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details Modal -->
+    <div class="modal fade" id="projectDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Project Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="projectDetailsContent">
+                    <!-- Project details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        let currentUser = null;
+        let authToken = null;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadUserInfo();
+            loadDashboardData();
+        });
+
+        function checkAuth() {
+            authToken = localStorage.getItem('token');
+            currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!authToken || !currentUser.id) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            if (currentUser.role !== 'researcher') {
+                window.location.href = 'index.html';
+                return;
+            }
+        }
+
+        function loadUserInfo() {
+            if (currentUser) {
+                document.getElementById('userName').textContent = 
+                    `${currentUser.first_name} ${currentUser.last_name}`;
+                document.getElementById('userRole').textContent = 
+                    `${currentUser.position} - ${currentUser.department}`;
+            }
+        }
+
+        async function apiRequest(endpoint, options = {}) {
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${authToken}`,
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        }
+
+        async function loadDashboardData() {
+            try {
+                const [stats, projects] = await Promise.all([
+                    apiRequest('/dashboard/stats'),
+                    apiRequest('/research-projects')
+                ]);
+
+                // Update statistics
+                document.getElementById('totalProjects').textContent = stats.totalProjects || 0;
+                
+                const statusCounts = stats.projectsByStatus || [];
+                document.getElementById('completedProjects').textContent = 
+                    statusCounts.find(s => s.status === 'completed')?.count || 0;
+                document.getElementById('pendingProjects').textContent = 
+                    statusCounts.find(s => s.status === 'under_review')?.count || 0;
+                
+                const categoryCounts = stats.projectsByCategory || [];
+                document.getElementById('proposalCount').textContent = 
+                    categoryCounts.find(c => c.category === 'proposal')?.count || 0;
+
+                // Load recent projects
+                loadRecentProjects(projects.slice(0, 5));
+
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+            }
+        }
+
+        function loadRecentProjects(projects) {
+            const container = document.getElementById('recentProjects');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<p class="text-muted">No recent projects.</p>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(project => `
+                <div class="d-flex justify-content-between align-items-center mb-2 p-2 bg-light rounded">
+                    <div>
+                        <strong>${project.title}</strong>
+                        <small class="text-muted d-block">${project.category}</small>
+                    </div>
+                    <span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span>
+                </div>
+            `).join('');
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'draft': 'secondary',
+                'submitted': 'primary',
+                'under_review': 'warning',
+                'approved': 'success',
+                'rejected': 'danger',
+                'completed': 'success'
+            };
+            return colors[status] || 'secondary';
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('d-none');
+            });
+            
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).classList.remove('d-none');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load section data
+            switch (sectionName) {
+                case 'projects':
+                    loadProjects();
+                    break;
+                case 'proposals':
+                    loadProjects('proposal');
+                    break;
+                case 'inhouse':
+                    loadProjects('inhouse');
+                    break;
+                case 'papers':
+                    loadProjects('research_paper');
+                    break;
+            }
+        }
+
+        async function loadProjects(category = null) {
+            try {
+                const projects = await apiRequest('/research-projects');
+                const filteredProjects = category ? 
+                    projects.filter(p => p.category === category) : projects;
+                
+                const containerId = category ? 
+                    `${category === 'research_paper' ? 'papers' : category}List` : 'projectsList';
+                
+                displayProjects(filteredProjects, containerId);
+            } catch (error) {
+                console.error('Error loading projects:', error);
+            }
+        }
+
+        function displayProjects(projects, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<div class="col-12"><p class="text-muted">No projects found.</p></div>';
+                return;
+            }
+            
+            container.innerHTML = projects.map(project => `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card project-card">
+                        <div class="card-body">
+                            <h5 class="card-title">${project.title}</h5>
+                            <p class="card-text">${project.description || 'No description'}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span>
+                                <button class="btn btn-sm btn-primary" onclick="viewProject(${project.id})">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function createProject(category) {
+            document.getElementById('projectCategory').value = category;
+            new bootstrap.Modal(document.getElementById('createProjectModal')).show();
+        }
+
+        async function submitProject() {
+            try {
+                const title = document.getElementById('projectTitle').value;
+                const category = document.getElementById('projectCategory').value;
+                const description = document.getElementById('projectDescription').value;
+                const file = document.getElementById('projectFile').files[0];
+                
+                if (!title || !category) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Create project
+                const project = await apiRequest('/research-projects', {
+                    method: 'POST',
+                    body: JSON.stringify({ title, category, description })
+                });
+                
+                // Upload file if provided
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('document', file);
+                    
+                    await fetch(`${API_BASE_URL}/research-projects/${project.id}/upload`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: formData
+                    });
+                }
+                
+                // Reset form and close modal
+                document.getElementById('createProjectForm').reset();
+                bootstrap.Modal.getInstance(document.getElementById('createProjectModal')).hide();
+                
+                // Reload current section
+                loadDashboardData();
+                
+                alert('Project created successfully!');
+                
+            } catch (error) {
+                console.error('Error creating project:', error);
+                alert('Error creating project. Please try again.');
+            }
+        }
+
+        async function viewProject(projectId) {
+            try {
+                const project = await apiRequest(`/research-projects/${projectId}`);
+                const documents = await apiRequest(`/research-projects/${projectId}/documents`);
+                
+                const modalContent = document.getElementById('projectDetailsContent');
+                modalContent.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4>${project.title}</h4>
+                            <p><strong>Category:</strong> ${project.category}</p>
+                            <p><strong>Status:</strong> <span class="status-badge bg-${getStatusColor(project.status)}">${project.status}</span></p>
+                            <p><strong>Description:</strong></p>
+                            <p>${project.description || 'No description provided'}</p>
+                            <p><strong>Created:</strong> ${new Date(project.created_at).toLocaleDateString()}</p>
+                            <p><strong>Last Updated:</strong> ${new Date(project.updated_at).toLocaleDateString()}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>Documents</h5>
+                            ${documents.length > 0 ? documents.map(doc => `
+                                <div class="document-item">
+                                    <div>
+                                        <strong>${doc.original_name}</strong>
+                                        <small class="text-muted d-block">${new Date(doc.uploaded_at).toLocaleDateString()}</small>
+                                    </div>
+                                    <i class="fas fa-file-pdf text-danger"></i>
+                                </div>
+                            `).join('') : '<p class="text-muted">No documents uploaded</p>'}
+                        </div>
+                    </div>
+                `;
+                
+                new bootstrap.Modal(document.getElementById('projectDetailsModal')).show();
+                
+            } catch (error) {
+                console.error('Error loading project details:', error);
+                alert('Error loading project details');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
