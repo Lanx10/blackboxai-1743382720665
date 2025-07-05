@@ -1,4 +1,4 @@
-THIS SHOULD BE A LINTER ERROR<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -289,7 +289,7 @@ THIS SHOULD BE A LINTER ERROR<!DOCTYPE html>
                     
                     <div class="research-highlight">
                         <h4><i class="fas fa-lightbulb me-2"></i>Featured Research</h4>
-                        <p>Discover innovative inhouse research projects and contribute to collaborative research efforts within PRMSU.</p>
+                        <p>Discover innovative inhouse research projects and contribute to collaborative research efforts within President Ramon Magsaysay State University.</p>
                     </div>
                     
                     <div class="row" id="inhouseProjectsList">
@@ -482,12 +482,12 @@ THIS SHOULD BE A LINTER ERROR<!DOCTYPE html>
             currentUser = JSON.parse(localStorage.getItem('user') || '{}');
             
             if (!authToken || !currentUser.id) {
-                window.location.href = 'index.html';
+                window.location.href = '/login';
                 return;
             }
             
             if (currentUser.role !== 'inhouse') {
-                window.location.href = 'index.html';
+                window.location.href = '/login';
                 return;
             }
         }
@@ -836,7 +836,7 @@ THIS SHOULD BE A LINTER ERROR<!DOCTYPE html>
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = 'index.html';
+            window.location.href = '/login';
         }
     </script>
 </body>

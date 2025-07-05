@@ -10,6 +10,7 @@ A comprehensive web application for managing research services at President Ramo
 3. **Inhouse Users** - Manage internal research projects and facilitate collaboration
 
 ### Core Functionality:
+- **Beautiful Landing Page**: Modern, responsive homepage showcasing system features
 - **Project Management**: Create, track, and manage research projects across three categories:
   - Research Proposals
   - Inhouse Research Projects  
@@ -77,7 +78,8 @@ The system comes with pre-configured demo accounts:
 │   ├── server.js          # Main server file
 │   └── init-db.js         # Database initialization
 ├── frontend/
-│   ├── index.html         # Login page
+│   ├── landing.html       # Beautiful homepage (/)
+│   ├── index.html         # Login page (/login)
 │   ├── researcher-dashboard.html
 │   ├── director-dashboard.html
 │   └── inhouse-dashboard.html

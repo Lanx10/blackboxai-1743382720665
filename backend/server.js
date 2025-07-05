@@ -15,7 +15,6 @@ const JWT_SECRET = 'your-secret-key-here'; // Change this in production
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('frontend'));
 
 // Database connection
 const db = new sqlite3.Database('./database.db');
@@ -398,6 +397,19 @@ app.get('/api/users', authenticateToken, requireRole(['research_director']), (re
         }
     );
 });
+
+// Serve the landing page as homepage
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/landing.html'));
+});
+
+// Serve the login page
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+});
+
+// Serve static files (after custom routes)
+app.use(express.static('frontend'));
 
 // Start server
 app.listen(PORT, () => {
