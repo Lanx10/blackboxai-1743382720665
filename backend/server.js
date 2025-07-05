@@ -400,12 +400,12 @@ app.get('/api/users', authenticateToken, requireRole(['research_director']), (re
 
 // Serve the landing page as homepage
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/landing.html'));
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 // Serve the login page
 app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/index.html'));
+    res.sendFile(path.join(__dirname, '../frontend/login.html'));
 });
 
 // Serve static files (after custom routes)

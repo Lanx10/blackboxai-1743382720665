@@ -3,223 +3,629 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRMSU Research Services - Login</title>
+    <title>PRMSU Research Services - Welcome</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .login-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            position: relative;
             overflow: hidden;
-            max-width: 900px;
-            width: 100%;
         }
-        .login-form {
-            padding: 3rem;
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
         }
-        .login-header {
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
             text-align: center;
-            margin-bottom: 2rem;
         }
-        .login-header h1 {
-            color: #333;
+
+        .hero h1 {
+            font-size: 3.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
-        .login-header p {
-            color: #666;
-            margin-bottom: 0;
+
+        .hero .lead {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        .form-control {
-            border-radius: 15px;
-            border: 2px solid #e9ecef;
-            padding: 0.75rem 1rem;
-            font-size: 1rem;
+
+        .university-badge {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            padding: 10px 25px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
-        .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+
+        .cta-buttons {
+            margin-top: 3rem;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 15px;
-            padding: 0.75rem 2rem;
+
+        .btn-hero {
+            padding: 15px 40px;
+            font-size: 1.1rem;
             font-weight: 600;
+            border-radius: 50px;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+
+        .btn-primary-hero {
+            background: white;
+            color: #667eea;
+            border: 2px solid white;
         }
-        .alert {
-            border-radius: 10px;
-            border: none;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-group label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        .login-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+        .btn-primary-hero:hover {
+            background: transparent;
             color: white;
-            padding: 3rem;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline-hero {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.8);
+        }
+
+        .btn-outline-hero:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-card h4 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* User Types Section */
+        .user-types {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .user-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            height: 100%;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            position: relative;
+        }
+
+        .researcher-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .director-avatar {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .inhouse-avatar {
+            background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
+        }
+
+        .user-card h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .user-card .role {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 50px 0 30px;
+        }
+
+        .footer-content {
             text-align: center;
         }
-        .login-info h2 {
-            font-weight: 700;
-            margin-bottom: 1rem;
+
+        .footer h5 {
+            margin-bottom: 20px;
+            font-weight: 600;
         }
-        .login-info p {
-            opacity: 0.9;
-            margin-bottom: 1rem;
+
+        .footer p {
+            margin-bottom: 10px;
+            opacity: 0.8;
         }
-        .demo-accounts {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-top: 1rem;
+
+        .footer-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 30px 0 20px;
         }
-        .demo-accounts h6 {
-            color: #495057;
-            margin-bottom: 0.5rem;
+
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
         }
-        .demo-accounts small {
-            color: #6c757d;
+
+        .fade-in-delay-1 { animation-delay: 0.2s; }
+        .fade-in-delay-2 { animation-delay: 0.4s; }
+        .fade-in-delay-3 { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .lead {
+                font-size: 1.1rem;
+            }
+            
+            .btn-hero {
+                padding: 12px 30px;
+                font-size: 1rem;
+                margin: 5px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="login-container">
-                    <div class="row g-0">
-                        <div class="col-md-6">
-                            <div class="login-info">
-                                <div>
-                                    <h2><i class="fas fa-flask me-2"></i>Research Services</h2>
-                                    <p>President Ramon Magsaysay State University</p>
-                                    <p>Manage your research projects, proposals, and collaborate with the research community.</p>
-                                    <a href="/" class="btn btn-outline-light btn-sm mt-3">
-                                        <i class="fas fa-home me-2"></i>Back to Homepage
-                                    </a>
-                                </div>
-                            </div>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-flask me-2"></i>PRMSU Research Services
+            </a>
+            <div class="ms-auto">
+                <a href="login.html" class="btn btn-outline-light btn-sm">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="university-badge fade-in">
+                    <i class="fas fa-university me-2"></i>President Ramon Magsaysay State University
+                </div>
+                <h1 class="fade-in fade-in-delay-1">Research Services Management</h1>
+                <p class="lead fade-in fade-in-delay-2">
+                    Empowering academic excellence through innovative research management. 
+                    Streamline your research projects, collaborate with colleagues, and drive discovery forward.
+                </p>
+                <div class="cta-buttons fade-in fade-in-delay-3">
+                    <a href="login.html" class="btn-hero btn-primary-hero">
+                        <i class="fas fa-rocket me-2"></i>Get Started
+                    </a>
+                    <a href="#features" class="btn-hero btn-outline-hero">
+                        <i class="fas fa-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Research Management</h2>
+                <p>Everything you need to manage, track, and collaborate on research projects in one comprehensive platform.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-project-diagram"></i>
                         </div>
-                        <div class="col-md-6">
-                            <div class="login-form">
-                                <div class="login-header">
-                                    <h1>Welcome Back</h1>
-                                    <p>Please sign in to your account</p>
-                                </div>
-                                
-                                <div id="alert-container"></div>
-                                
-                                <form id="loginForm">
-                                    <div class="form-group">
-                                        <label for="username">Username</label>
-                                        <input type="text" class="form-control" id="username" required>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password" required>
-                                    </div>
-                                    
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary btn-lg">
-                                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                                        </button>
-                                    </div>
-                                </form>
-                                
-                                <div class="demo-accounts">
-                                    <h6>Demo Accounts:</h6>
-                                    <small>
-                                        <strong>Research Director:</strong> admin / password123<br>
-                                        <strong>Researcher:</strong> researcher1 / password123<br>
-                                        <strong>Inhouse User:</strong> inhouse1 / password123
-                                    </small>
-                                </div>
-                            </div>
+                        <h4>Project Management</h4>
+                        <p>Organize and track research projects from conception to completion. Manage proposals, research papers, and inhouse projects with ease.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
                         </div>
+                        <h4>Collaboration Hub</h4>
+                        <p>Connect with fellow researchers, share resources, and work together on groundbreaking research initiatives across departments.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-file-upload"></i>
+                        </div>
+                        <h4>Document Management</h4>
+                        <p>Securely upload, store, and manage research documents. Support for multiple file formats with version control.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Analytics Dashboard</h4>
+                        <p>Track research progress with real-time analytics. Monitor project status, completion rates, and research output metrics.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Secure & Reliable</h4>
+                        <p>Built with security in mind. Role-based access control ensures your research data is protected and accessible only to authorized users.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4>Mobile Friendly</h4>
+                        <p>Access your research projects anywhere, anytime. Fully responsive design works seamlessly on desktop, tablet, and mobile devices.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- User Types Section -->
+    <section class="user-types">
+        <div class="container">
+            <div class="section-title">
+                <h2>Designed for Every Research Role</h2>
+                <p>Tailored interfaces and features for researchers, directors, and inhouse research teams.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="user-card">
+                        <div class="user-avatar researcher-avatar">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div class="role">Researchers</div>
+                        <h4>Faculty & Instructors</h4>
+                        <p>Create and manage research projects, submit proposals, upload research papers, and track project progress. Collaborate with colleagues and access research resources.</p>
+                        <ul class="list-unstyled mt-3">
+                            <li><i class="fas fa-check text-success me-2"></i>Project Creation & Management</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Document Upload & Storage</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Progress Tracking</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Collaboration Tools</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="user-card">
+                        <div class="user-avatar director-avatar">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <div class="role">Research Director</div>
+                        <h4>Administrative Oversight</h4>
+                        <p>Comprehensive system oversight with approval workflows, user management, and detailed analytics. Review and approve research proposals with full visibility.</p>
+                        <ul class="list-unstyled mt-3">
+                            <li><i class="fas fa-check text-success me-2"></i>System-wide Analytics</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Approval Workflows</li>
+                            <li><i class="fas fa-check text-success me-2"></i>User Management</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Research Oversight</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="user-card">
+                        <div class="user-avatar inhouse-avatar">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="role">Inhouse Users</div>
+                        <h4>Internal Research</h4>
+                        <p>Manage internal research projects, facilitate collaboration between departments, and provide research support services to the academic community.</p>
+                        <ul class="list-unstyled mt-3">
+                            <li><i class="fas fa-check text-success me-2"></i>Inhouse Project Management</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Inter-department Collaboration</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Resource Sharing</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Research Support</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Active Researchers</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">1,200+</span>
+                        <span class="stat-label">Research Projects</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">350+</span>
+                        <span class="stat-label">Published Papers</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">Departments</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h5><i class="fas fa-university me-2"></i>President Ramon Magsaysay State University</h5>
+                <p>Research Services Management System</p>
+                <p>Empowering Academic Excellence Through Innovation</p>
+                <div class="footer-divider"></div>
+                <p>&copy; 2024 PRMSU Research Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        const API_BASE_URL = 'http://localhost:3000/api';
-        
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    
-                    // Redirect based on user role
-                    switch (data.user.role) {
-                        case 'researcher':
-                            window.location.href = 'researcher-dashboard.html';
-                            break;
-                        case 'research_director':
-                            window.location.href = 'director-dashboard.html';
-                            break;
-                        case 'inhouse':
-                            window.location.href = 'inhouse-dashboard.html';
-                            break;
-                        default:
-                            window.location.href = 'researcher-dashboard.html';
-                    }
-                } else {
-                    showAlert(data.error || 'Login failed', 'danger');
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
-            } catch (error) {
-                showAlert('Network error. Please try again.', 'danger');
+            });
+        });
+
+        // Add scroll effect to navbar
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(102, 126, 234, 0.95)';
+            } else {
+                navbar.style.background = 'rgba(255,255,255,0.1)';
             }
         });
-        
-        function showAlert(message, type) {
-            const alertContainer = document.getElementById('alert-container');
-            alertContainer.innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
+
+        // Animate stats when they come into view
+        const observerOptions = {
+            threshold: 0.5,
+            triggerOnce: true
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        const finalNumber = parseInt(stat.textContent);
+                        animateNumber(stat, 0, finalNumber, 2000);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        function animateNumber(element, start, end, duration) {
+            const startTime = performance.now();
+            const suffix = element.textContent.replace(/[0-9]/g, '');
+            
+            function updateNumber(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateNumber);
+                }
+            }
+            
+            requestAnimationFrame(updateNumber);
         }
     </script>
 </body>

@@ -78,8 +78,8 @@ The system comes with pre-configured demo accounts:
 │   ├── server.js          # Main server file
 │   └── init-db.js         # Database initialization
 ├── frontend/
-│   ├── landing.html       # Beautiful homepage (/)
-│   ├── index.html         # Login page (/login)
+│   ├── index.html         # Beautiful homepage (/)
+│   ├── login.html         # Login page (/login)
 │   ├── researcher-dashboard.html
 │   ├── director-dashboard.html
 │   └── inhouse-dashboard.html

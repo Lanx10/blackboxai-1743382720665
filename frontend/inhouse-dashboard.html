@@ -482,12 +482,12 @@
             currentUser = JSON.parse(localStorage.getItem('user') || '{}');
             
             if (!authToken || !currentUser.id) {
-                window.location.href = '/login';
+                window.location.href = 'login.html';
                 return;
             }
             
             if (currentUser.role !== 'inhouse') {
-                window.location.href = '/login';
+                window.location.href = 'login.html';
                 return;
             }
         }
@@ -836,7 +836,7 @@
         function logout() {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
-            window.location.href = '/login';
+            window.location.href = 'login.html';
         }
     </script>
 </body>
